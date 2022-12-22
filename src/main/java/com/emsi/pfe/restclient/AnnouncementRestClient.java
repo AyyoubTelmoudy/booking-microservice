@@ -1,4 +1,4 @@
-package com.emsi.pfe.feign;
+package com.emsi.pfe.restclient;
 
 public interface AnnouncementRestClient {
 }

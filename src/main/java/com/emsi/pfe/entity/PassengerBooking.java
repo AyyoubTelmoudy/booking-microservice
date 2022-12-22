@@ -13,7 +13,9 @@ import java.util.Date;
 public class PassengerBooking {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String publicId;
+    private String passengerPublicId;
+    private String announcementPublicId;
     private Date date;
-
 }
