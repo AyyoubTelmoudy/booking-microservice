@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface PassengerBookingService {
     List<PassengerDTO> getPassengersByAnnouncement(String idAnnouncement);
-    PassengerBookingDTO bookPassengerSeat(BookingRequest bookingRequest);
+    PassengerBookingDTO bookPassengerSeat(String announcementPublicId);
+    void cancelPassengerSeatBooking(String announcementPublicId);
 }

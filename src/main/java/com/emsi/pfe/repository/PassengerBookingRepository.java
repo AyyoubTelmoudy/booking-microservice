@@ -9,4 +9,8 @@ import java.util.List;
 @Repository
 public interface PassengerBookingRepository extends JpaRepository<PassengerBooking,Long> {
     List<PassengerBooking> findByAnnouncementPublicId(String announcementPublicId);
+    List<PassengerBooking> deleteByPassengerPublicIdAndAnnouncementPublicId(String passengerPublicId, String announcementPublicId);
+
+    List<PassengerBooking> findByPassengerPublicIdAndAnnouncementPublicId(String publicId, String announcementPublicId);
+
 }

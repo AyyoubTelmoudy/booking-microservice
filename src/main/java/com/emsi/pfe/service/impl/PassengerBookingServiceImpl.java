@@ -4,23 +4,24 @@ import com.emsi.pfe.dto.PassengerBookingDTO;
 import com.emsi.pfe.dto.PassengerDTO;
 import com.emsi.pfe.entity.PassengerBooking;
 import com.emsi.pfe.feign.AccountRestClient;
+import com.emsi.pfe.feign.AnnouncementRestClient;
 import com.emsi.pfe.mapper.PassengerBookingMapper;
 import com.emsi.pfe.repository.PassengerBookingRepository;
-import com.emsi.pfe.requests.BookingRequest;
 import com.emsi.pfe.service.PassengerBookingService;
 import com.emsi.pfe.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import javax.transaction.Transactional;
+import java.util.*;
+@Transactional
 @Service
 public class PassengerBookingServiceImpl implements PassengerBookingService {
 
     @Autowired
     AccountRestClient accountRestClient;
+    @Autowired
+    AnnouncementRestClient announcementRestClient;
     @Autowired
     PassengerBookingRepository passengerBookingRepository;
     @Autowired
@@ -38,13 +39,21 @@ public class PassengerBookingServiceImpl implements PassengerBookingService {
     }
 
     @Override
-    public PassengerBookingDTO bookPassengerSeat(BookingRequest bookingRequest) {
+    public PassengerBookingDTO bookPassengerSeat(String announcementPublicId) {
         PassengerBooking passengerBooking=new PassengerBooking();
         passengerBooking.setDate(new Date());
-        passengerBooking.setAnnouncementPublicId(bookingRequest.getAnnouncementPublicId());
-        passengerBooking.setPassengerPublicId(bookingRequest.getPassengerPublicId());
+        passengerBooking.setAnnouncementPublicId(announcementPublicId);
+        passengerBooking.setPassengerPublicId(accountRestClient.getPassengerByEmail(Utils.getCurrentUserEmail()).getPublicId());
         passengerBooking.setPublicId(Utils.genereteRandomString(32));
         passengerBooking=passengerBookingRepository.save(passengerBooking);
+        //announcementRestClient.bookPassengerSeat(announcementPublicId);
         return passengerBookingMapper.toPassengerBookingDTO(passengerBooking);
+    }
+
+    @Override
+    public void cancelPassengerSeatBooking(String announcementPublicId) {
+       List<PassengerBooking> passengerBookings= passengerBookingRepository.findByPassengerPublicIdAndAnnouncementPublicId(accountRestClient.getPassengerByEmail(Utils.getCurrentUserEmail()).getPublicId(),announcementPublicId);
+       passengerBookingRepository.deleteByPassengerPublicIdAndAnnouncementPublicId(accountRestClient.getPassengerByEmail(Utils.getCurrentUserEmail()).getPublicId(),announcementPublicId);
+        //announcementRestClient.cancelPassengerSeatBooking(announcementPublicId);
     }
 }

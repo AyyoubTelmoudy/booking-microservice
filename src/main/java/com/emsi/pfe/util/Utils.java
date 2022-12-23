@@ -1,6 +1,8 @@
 package com.emsi.pfe.util;
 
 import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.stereotype.Component;
@@ -16,6 +18,12 @@ public class Utils {
             returnvalue.append(ALPHANUM.charAt(RANDOM.nextInt(ALPHANUM.length())));
         }
         return new String(returnvalue);
+    }
+
+    public static Map<String,String> getCurrentUserEmail()
+    {
+        Map<String,String> headers=new HashMap<String,String>(); headers.put("email","ayyoub@gmail.com");
+        return headers;
     }
 
 }

@@ -23,9 +23,18 @@ public class PassengerBookingController {
         return passengerBookingService.getPassengersByAnnouncement(idAnnouncement);
     }
 
-    @PostMapping(value = "/announcements/booking")
-    public PassengerBookingDTO bookPassengerSeat(@RequestBody BookingRequest bookingRequest)
+    @PostMapping(value = "/announcements/{announcementPublicId}/booking")
+    public PassengerBookingDTO bookPassengerSeat(@PathVariable String announcementPublicId)
     {
-        return passengerBookingService.bookPassengerSeat(bookingRequest);
+        return passengerBookingService.bookPassengerSeat(announcementPublicId);
     }
+
+    @DeleteMapping(value = "/announcements/{announcementPublicId}/booking")
+    public void cancelPassengerSeatBooking(@PathVariable String announcementPublicId)
+    {
+        passengerBookingService.cancelPassengerSeatBooking(announcementPublicId);
+    }
+
+
+
 }

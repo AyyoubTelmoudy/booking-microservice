@@ -12,7 +12,7 @@ public class AccountRestClientImpl implements AccountRestClient {
     RestTemplate restTemplate;
     @Override
     public PassengerDTO getPassengerByPublicId(String passengerPublicId) {
-        PassengerDTO passengerDTO= restTemplate.getForObject("http://localhost:8081/passengers/"+passengerPublicId, PassengerDTO.class);
+        PassengerDTO passengerDTO= restTemplate.getForObject("https://accounts-microservice-production.up.railway.app/passengers/"+passengerPublicId, PassengerDTO.class);
         return passengerDTO;
     }
 }
