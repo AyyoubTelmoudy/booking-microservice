@@ -7,6 +7,7 @@ import com.emsi.pfe.feign.AccountRestClient;
 import com.emsi.pfe.feign.AnnouncementRestClient;
 import com.emsi.pfe.mapper.PassengerBookingMapper;
 import com.emsi.pfe.repository.PassengerBookingRepository;
+import com.emsi.pfe.security.SecurityUtils;
 import com.emsi.pfe.service.PassengerBookingService;
 import com.emsi.pfe.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ public class PassengerBookingServiceImpl implements PassengerBookingService {
 
     @Autowired
     AccountRestClient accountRestClient;
+    @Autowired
+    SecurityUtils securityUtils;
     @Autowired
     AnnouncementRestClient announcementRestClient;
     @Autowired
@@ -40,20 +43,24 @@ public class PassengerBookingServiceImpl implements PassengerBookingService {
 
     @Override
     public PassengerBookingDTO bookPassengerSeat(String announcementPublicId) {
+
+        Map<String,String> email=new HashMap<String,String>();
+        email.put("email",securityUtils.getCurrentUserEmail());
         PassengerBooking passengerBooking=new PassengerBooking();
         passengerBooking.setDate(new Date());
         passengerBooking.setAnnouncementPublicId(announcementPublicId);
-        passengerBooking.setPassengerPublicId(accountRestClient.getPassengerByEmail(Utils.getCurrentUserEmail()).getPublicId());
+        passengerBooking.setPassengerPublicId(accountRestClient.getPassengerByEmail(email).getPublicId());
         passengerBooking.setPublicId(Utils.genereteRandomString(32));
         passengerBooking=passengerBookingRepository.save(passengerBooking);
-        //announcementRestClient.bookPassengerSeat(announcementPublicId);
+        announcementRestClient.cancelPassengerSeatBooking(announcementPublicId);
         return passengerBookingMapper.toPassengerBookingDTO(passengerBooking);
     }
 
     @Override
     public void cancelPassengerSeatBooking(String announcementPublicId) {
-       List<PassengerBooking> passengerBookings= passengerBookingRepository.findByPassengerPublicIdAndAnnouncementPublicId(accountRestClient.getPassengerByEmail(Utils.getCurrentUserEmail()).getPublicId(),announcementPublicId);
-       passengerBookingRepository.deleteByPassengerPublicIdAndAnnouncementPublicId(accountRestClient.getPassengerByEmail(Utils.getCurrentUserEmail()).getPublicId(),announcementPublicId);
-        //announcementRestClient.cancelPassengerSeatBooking(announcementPublicId);
+        Map<String,String> email=new HashMap<String,String>();
+        email.put("email",securityUtils.getCurrentUserEmail());
+        passengerBookingRepository.deleteByPassengerPublicIdAndAnnouncementPublicId(accountRestClient.getPassengerByEmail(email).getPublicId(),announcementPublicId);
+        announcementRestClient.bookPassengerSeat(announcementPublicId);
     }
 }

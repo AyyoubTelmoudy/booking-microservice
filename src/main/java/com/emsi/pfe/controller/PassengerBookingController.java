@@ -16,10 +16,10 @@ public class PassengerBookingController {
     @Autowired
     PassengerBookingService passengerBookingService;
 
-    @GetMapping(value = "/booking/announcements/{publicId}/passengers")
-    public List<PassengerDTO> getPassengersByAnnouncement(@PathVariable(name = "publicId") String idAnnouncement)
+    @GetMapping(value = "/booking/announcements/{announcementPublicId}/passengers")
+    public List<PassengerDTO> getPassengersByAnnouncement(@PathVariable(name = "announcementPublicId") String announcementPublicId)
     {
-        return passengerBookingService.getPassengersByAnnouncement(idAnnouncement);
+        return passengerBookingService.getPassengersByAnnouncement(announcementPublicId);
     }
 
     @PostMapping(value = "/booking/announcements/{announcementPublicId}")

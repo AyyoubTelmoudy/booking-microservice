@@ -20,10 +20,5 @@ public class Utils {
         return new String(returnvalue);
     }
 
-    public static Map<String,String> getCurrentUserEmail()
-    {
-        Map<String,String> headers=new HashMap<String,String>(); headers.put("email","ayyoub@gmail.com");
-        return headers;
-    }
 
 }
