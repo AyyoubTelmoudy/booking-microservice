@@ -43,8 +43,7 @@ public class PassengerBookingServiceImpl implements PassengerBookingService {
 
     @Override
     public PassengerBookingDTO bookPassengerSeat(String announcementPublicId) {
-        Map<String,String> email=new HashMap<String,String>();
-        email.put("email",securityUtils.getCurrentUserEmail());
+        String email=securityUtils.getCurrentUserEmail();
         PassengerBooking passengerBooking=new PassengerBooking();
         passengerBooking.setDate(new Date());
         passengerBooking.setAnnouncementPublicId(announcementPublicId);
@@ -58,15 +57,13 @@ public class PassengerBookingServiceImpl implements PassengerBookingService {
 
     @Override
     public void cancelPassengerSeatBooking(String announcementPublicId) {
-        Map<String,String> email=new HashMap<String,String>();
-        email.put("email",securityUtils.getCurrentUserEmail());
+        String email=securityUtils.getCurrentUserEmail();
         passengerBookingRepository.deleteByPassengerPublicIdAndAnnouncementPublicId(accountRestClient.getPassengerByEmail(email).getPublicId(),announcementPublicId);
     }
 
     @Override
     public void confirmReservation(String announcementPublicId) {
-        Map<String,String> email=new HashMap<String,String>();
-        email.put("email",securityUtils.getCurrentUserEmail());
+        String email=securityUtils.getCurrentUserEmail();
         PassengerBooking passengerBooking = passengerBookingRepository.findByPassengerPublicIdAndAnnouncementPublicId(accountRestClient.getPassengerByEmail(email).getPublicId(),announcementPublicId);
         passengerBooking.setConfirmed(true);
         passengerBookingRepository.save(passengerBooking);
