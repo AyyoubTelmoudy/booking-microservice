@@ -43,7 +43,6 @@ public class PassengerBookingServiceImpl implements PassengerBookingService {
 
     @Override
     public PassengerBookingDTO bookPassengerSeat(String announcementPublicId) {
-
         Map<String,String> email=new HashMap<String,String>();
         email.put("email",securityUtils.getCurrentUserEmail());
         PassengerBooking passengerBooking=new PassengerBooking();
@@ -51,8 +50,9 @@ public class PassengerBookingServiceImpl implements PassengerBookingService {
         passengerBooking.setAnnouncementPublicId(announcementPublicId);
         passengerBooking.setPassengerPublicId(accountRestClient.getPassengerByEmail(email).getPublicId());
         passengerBooking.setPublicId(Utils.genereteRandomString(32));
+        passengerBooking.setConfirmed(false);
         passengerBooking=passengerBookingRepository.save(passengerBooking);
-        announcementRestClient.cancelPassengerSeatBooking(announcementPublicId);
+        //announcementRestClient.cancelPassengerSeatBooking(announcementPublicId);
         return passengerBookingMapper.toPassengerBookingDTO(passengerBooking);
     }
 
@@ -61,6 +61,15 @@ public class PassengerBookingServiceImpl implements PassengerBookingService {
         Map<String,String> email=new HashMap<String,String>();
         email.put("email",securityUtils.getCurrentUserEmail());
         passengerBookingRepository.deleteByPassengerPublicIdAndAnnouncementPublicId(accountRestClient.getPassengerByEmail(email).getPublicId(),announcementPublicId);
+    }
+
+    @Override
+    public void confirmReservation(String announcementPublicId) {
+        Map<String,String> email=new HashMap<String,String>();
+        email.put("email",securityUtils.getCurrentUserEmail());
+        PassengerBooking passengerBooking = passengerBookingRepository.findByPassengerPublicIdAndAnnouncementPublicId(accountRestClient.getPassengerByEmail(email).getPublicId(),announcementPublicId);
+        passengerBooking.setConfirmed(true);
+        passengerBookingRepository.save(passengerBooking);
         announcementRestClient.bookPassengerSeat(announcementPublicId);
     }
 }

@@ -17,5 +17,6 @@ public class PassengerBooking {
     private String publicId;
     private String passengerPublicId;
     private String announcementPublicId;
+    private boolean confirmed;
     private Date date;
 }

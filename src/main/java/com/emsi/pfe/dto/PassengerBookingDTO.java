@@ -12,5 +12,7 @@ import java.util.Date;
 public class PassengerBookingDTO {
     private String passengerPublicId;
     private String announcementPublicId;
+    private  boolean confirmed;
     private Date date;
+
 }

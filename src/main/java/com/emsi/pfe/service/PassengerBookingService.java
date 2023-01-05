@@ -10,4 +10,5 @@ public interface PassengerBookingService {
     List<PassengerDTO> getPassengersByAnnouncement(String idAnnouncement);
     PassengerBookingDTO bookPassengerSeat(String announcementPublicId);
     void cancelPassengerSeatBooking(String announcementPublicId);
+    void confirmReservation(String announcementPublicId);
 }

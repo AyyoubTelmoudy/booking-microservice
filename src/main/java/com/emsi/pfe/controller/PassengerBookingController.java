@@ -28,6 +28,12 @@ public class PassengerBookingController {
         return passengerBookingService.bookPassengerSeat(announcementPublicId);
     }
 
+    @PutMapping(value = "/booking/announcements/{announcementPublicId}")
+    public void confirmReservation(@PathVariable String announcementPublicId)
+    {
+        passengerBookingService.confirmReservation(announcementPublicId);
+    }
+
     @DeleteMapping(value = "/booking/announcements/{announcementPublicId}")
     public void cancelPassengerSeatBooking(@PathVariable String announcementPublicId)
     {

@@ -11,6 +11,6 @@ public interface PassengerBookingRepository extends JpaRepository<PassengerBooki
     List<PassengerBooking> findByAnnouncementPublicId(String announcementPublicId);
     List<PassengerBooking> deleteByPassengerPublicIdAndAnnouncementPublicId(String passengerPublicId, String announcementPublicId);
 
-    List<PassengerBooking> findByPassengerPublicIdAndAnnouncementPublicId(String publicId, String announcementPublicId);
+    PassengerBooking findByPassengerPublicIdAndAnnouncementPublicId(String publicId, String announcementPublicId);
 
 }
