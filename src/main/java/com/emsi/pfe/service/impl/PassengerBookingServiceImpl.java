@@ -45,6 +45,7 @@ public class PassengerBookingServiceImpl implements PassengerBookingService {
 
     @Override
     public PassengerBookingDTO bookPassengerSeat(String announcementPublicId) throws ReservationAlreadyDoneException {
+       System.out.println(securityUtils.getCurrentUserEmail());
         String passengerPublicId=accountRestClient.getPassengerByEmail(securityUtils.getCurrentUserEmail()).getPublicId();
         PassengerBooking oldPassengerBooking=passengerBookingRepository.findByPassengerPublicIdAndAnnouncementPublicId(passengerPublicId,announcementPublicId);
         if(oldPassengerBooking!=null)
@@ -75,8 +76,11 @@ public class PassengerBookingServiceImpl implements PassengerBookingService {
     public void confirmReservation(String announcementPublicId) {
         String email=securityUtils.getCurrentUserEmail();
         PassengerBooking passengerBooking = passengerBookingRepository.findByPassengerPublicIdAndAnnouncementPublicId(accountRestClient.getPassengerByEmail(email).getPublicId(),announcementPublicId);
-        passengerBooking.setConfirmed(true);
-        passengerBookingRepository.save(passengerBooking);
-        announcementRestClient.bookPassengerSeat(announcementPublicId);
+          if(passengerBooking!=null)
+          {
+              passengerBooking.setConfirmed(true);
+              passengerBookingRepository.save(passengerBooking);
+              announcementRestClient.bookPassengerSeat(announcementPublicId);
+          }
     }
 }
