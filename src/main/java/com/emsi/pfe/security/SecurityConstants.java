@@ -7,5 +7,5 @@ public class SecurityConstants {
     public static final String ERROR_MESSAGE="error_message";
     public static final String ERROR="error";
     public static final String ROLES="roles";
-
+    public static final String RESERVATION_ALREADY_DONE = "Reservation already done for this announce";
 }

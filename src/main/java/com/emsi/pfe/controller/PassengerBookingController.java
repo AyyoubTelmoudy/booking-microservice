@@ -2,6 +2,7 @@ package com.emsi.pfe.controller;
 
 import com.emsi.pfe.dto.PassengerBookingDTO;
 import com.emsi.pfe.dto.PassengerDTO;
+import com.emsi.pfe.exception.ReservationAlreadyDoneException;
 import com.emsi.pfe.service.PassengerBookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,7 @@ public class PassengerBookingController {
     }
 
     @PostMapping(value = "/booking/announcements/{announcementPublicId}")
-    public PassengerBookingDTO bookPassengerSeat(@PathVariable String announcementPublicId)
-    {
+    public PassengerBookingDTO bookPassengerSeat(@PathVariable String announcementPublicId) throws ReservationAlreadyDoneException {
         return passengerBookingService.bookPassengerSeat(announcementPublicId);
     }
 

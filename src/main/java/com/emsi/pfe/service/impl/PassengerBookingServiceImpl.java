@@ -3,10 +3,12 @@ package com.emsi.pfe.service.impl;
 import com.emsi.pfe.dto.PassengerBookingDTO;
 import com.emsi.pfe.dto.PassengerDTO;
 import com.emsi.pfe.entity.PassengerBooking;
+import com.emsi.pfe.exception.ReservationAlreadyDoneException;
 import com.emsi.pfe.feign.AccountRestClient;
 import com.emsi.pfe.feign.AnnouncementRestClient;
 import com.emsi.pfe.mapper.PassengerBookingMapper;
 import com.emsi.pfe.repository.PassengerBookingRepository;
+import com.emsi.pfe.security.SecurityConstants;
 import com.emsi.pfe.security.SecurityUtils;
 import com.emsi.pfe.service.PassengerBookingService;
 import com.emsi.pfe.util.Utils;
@@ -42,17 +44,25 @@ public class PassengerBookingServiceImpl implements PassengerBookingService {
     }
 
     @Override
-    public PassengerBookingDTO bookPassengerSeat(String announcementPublicId) {
-        String email=securityUtils.getCurrentUserEmail();
-        PassengerBooking passengerBooking=new PassengerBooking();
-        passengerBooking.setDate(new Date());
-        passengerBooking.setAnnouncementPublicId(announcementPublicId);
-        passengerBooking.setPassengerPublicId(accountRestClient.getPassengerByEmail(email).getPublicId());
-        passengerBooking.setPublicId(Utils.genereteRandomString(32));
-        passengerBooking.setConfirmed(false);
-        passengerBooking=passengerBookingRepository.save(passengerBooking);
-        //announcementRestClient.cancelPassengerSeatBooking(announcementPublicId);
-        return passengerBookingMapper.toPassengerBookingDTO(passengerBooking);
+    public PassengerBookingDTO bookPassengerSeat(String announcementPublicId) throws ReservationAlreadyDoneException {
+        String passengerPublicId=accountRestClient.getPassengerByEmail(securityUtils.getCurrentUserEmail()).getPublicId();
+        PassengerBooking oldPassengerBooking=passengerBookingRepository.findByPassengerPublicIdAndAnnouncementPublicId(passengerPublicId,announcementPublicId);
+        if(oldPassengerBooking!=null)
+        {
+            throw new ReservationAlreadyDoneException(SecurityConstants.RESERVATION_ALREADY_DONE);
+        }
+        else
+        {
+            PassengerBooking passengerBooking=new PassengerBooking();
+            passengerBooking.setDate(new Date());
+            passengerBooking.setAnnouncementPublicId(announcementPublicId);
+            passengerBooking.setPassengerPublicId(passengerPublicId);
+            passengerBooking.setPublicId(Utils.genereteRandomString(32));
+            passengerBooking.setConfirmed(false);
+            passengerBooking=passengerBookingRepository.save(passengerBooking);
+            return passengerBookingMapper.toPassengerBookingDTO(passengerBooking);
+        }
+
     }
 
     @Override
