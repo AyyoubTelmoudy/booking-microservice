@@ -29,15 +29,15 @@ public class PassengerBookingController {
     }
 
     @PutMapping(value = "/booking/announcements/{announcementPublicId}")
-    public void confirmReservation(@PathVariable String announcementPublicId)
+    public void confirmReservation(@PathVariable String announcementPublicId,@RequestHeader(name = "passengerPublicId") String passengerPublicId)
     {
-        passengerBookingService.confirmReservation(announcementPublicId);
+        passengerBookingService.confirmReservation(announcementPublicId,passengerPublicId);
     }
 
     @DeleteMapping(value = "/booking/announcements/{announcementPublicId}")
-    public void cancelPassengerSeatBooking(@PathVariable String announcementPublicId)
+    public void cancelPassengerSeatBooking(@PathVariable String announcementPublicId ,@RequestHeader(name = "passengerPublicId") String passengerPublicId)
     {
-        passengerBookingService.cancelPassengerSeatBooking(announcementPublicId);
+        passengerBookingService.cancelPassengerSeatBooking(announcementPublicId,passengerPublicId);
     }
 
 
