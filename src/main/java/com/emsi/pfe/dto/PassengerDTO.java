@@ -14,5 +14,6 @@ public class PassengerDTO {
     private String phoneNumber;
     private String cin;
     private Date birthday;
+    private  boolean confirmed;
 }
 

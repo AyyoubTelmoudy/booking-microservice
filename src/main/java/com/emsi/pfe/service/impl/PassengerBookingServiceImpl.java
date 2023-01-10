@@ -38,6 +38,7 @@ public class PassengerBookingServiceImpl implements PassengerBookingService {
         for (PassengerBooking booking : passengerBookings)
         {
            PassengerDTO passengerDTO=accountRestClient.getPassengerByPublicId(booking.getPassengerPublicId());
+           passengerDTO.setConfirmed(booking.isConfirmed());
            passengerDTOS.add(passengerDTO);
         }
         return passengerDTOS;
